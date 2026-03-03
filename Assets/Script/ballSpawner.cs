@@ -78,7 +78,7 @@ public class ballSpawner : MonoBehaviour
     void SpawnBall()
     {
         if(!canSpawn) return;
-        Instantiate(currentBallPrefab, currentPreview.transform.position, Quaternion.identity);
+        GameObject newBall = Instantiate(currentBallPrefab, currentPreview.transform.position, Quaternion.identity);
         Destroy(currentPreview);
         previewExists = false;     
         StartCoroutine(SpawnDelay());

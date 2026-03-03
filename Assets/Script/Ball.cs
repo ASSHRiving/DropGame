@@ -7,7 +7,7 @@ public class Ball : MonoBehaviour
     public GameObject nextBallPrefab; // 下一級球
     public bool isDroped = false;     // 是否已經落地
 
-    private bool isMerging = false;   // 防止重複合成
+    public bool isMerging = false;   // 防止重複合成
     
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -39,7 +39,7 @@ public class Ball : MonoBehaviour
         newBall.StartCoroutine(newBall.MergeDelay());
 
         GameManager.AddScore(level * 10); // 加分，分數為等級*10
-
+    
         Destroy(other.gameObject, 0.02f);
         Destroy(gameObject, 0.02f);
     }

@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public float loseHeight = 1.1f; // 堆疊到這個高度算輸
+    public float loseHeight = 1f; // 堆疊到這個高度算輸
     public TMP_Text gameOverText; // 連結 TMP Text
     public TMP_Text scoreText; // 連結分數顯示文本
     //重開按鈕
@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
         {
             Rigidbody2D rb = b.GetComponent<Rigidbody2D>();
 
-            if(b.isDroped && (rb != null && rb.linearVelocity.magnitude < 0.1f)) // 只考慮已落地且速度小於某值的球
+            if(b.isDroped && rb != null && rb.linearVelocity.magnitude < 0.1f && !b.isMerging) // 只考慮已落地且靜止的球
             {
                 float topY = b.transform.position.y + b.GetComponent<CircleCollider2D>().radius;
                 if(topY > highestY)
