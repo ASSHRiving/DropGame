@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour
         {
             Rigidbody2D rb = b.GetComponent<Rigidbody2D>();
 
-            if(b.isDroped && (rb != null && rb.IsSleeping())) // 只考慮已落地且幾乎靜止的球
+            if(b.isDroped && (rb != null && rb.linearVelocity.magnitude < 0.1f)) // 只考慮已落地且速度小於某值的球
             {
                 float topY = b.transform.position.y + b.GetComponent<CircleCollider2D>().radius;
                 if(topY > highestY)
