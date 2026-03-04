@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
-    public float loseHeight = 1.1f; // 堆疊到這個高度算輸
+    public float loseHeight = 1f; // 堆疊到這個高度算輸
     public TMP_Text gameOverText; // 連結 TMP Text
     public TMP_Text scoreText; // 連結分數顯示文本
     //重開按鈕
