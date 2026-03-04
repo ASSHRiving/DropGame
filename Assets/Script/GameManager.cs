@@ -5,11 +5,12 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
-    public float loseHeight = 1f; // 堆疊到這個高度算輸
+    public float loseHeight = 1.1f; // 堆疊到這個高度算輸
     public TMP_Text gameOverText; // 連結 TMP Text
     public TMP_Text scoreText; // 連結分數顯示文本
     //重開按鈕
     public GameObject restartButton;
+    public GameObject exitButton;
     public static int score = 0; // 分數
 
     public static bool isGameOver = false;
@@ -18,7 +19,10 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         if(gameOverText != null)
+        {
             gameOverText.gameObject.SetActive(false); // 一開始隱藏
+            exitButton.SetActive(false);
+        }
 
         if (restartButton != null)
         {
@@ -37,8 +41,12 @@ public class GameManager : MonoBehaviour
         //esc退出遊戲
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Application.Quit();
+            Exit();
         }
+    }
+    public void Exit()
+    {
+        SceneManager.LoadScene("MainScene");
     }
     public static void RegisterBall(Ball ball)
     {
@@ -67,8 +75,7 @@ public class GameManager : MonoBehaviour
             if (!b.isDroped || b.isMerging || !rb.IsSleeping())
                 continue;
 
-            float topY = b.transform.position.y +
-                        b.GetComponent<CircleCollider2D>().radius;
+            float topY = b.GetComponent<CircleCollider2D>().bounds.max.y;
 
             if (topY > highestY)
                 highestY = topY;
@@ -88,6 +95,10 @@ public class GameManager : MonoBehaviour
         {
             restartButton.SetActive(true);
             MoveRestartToCenter();
+        }
+        if (exitButton != null)
+        {
+            exitButton.SetActive(true);
         }
         if(gameOverText != null)
             gameOverText.gameObject.SetActive(true);
