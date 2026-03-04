@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro; // 注意這行
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class GameManager : MonoBehaviour
     public static int score = 0; // 分數
 
     public static bool isGameOver = false;
+    public static List<Ball> activeBalls = new List<Ball>();
 
     void Start()
     {
@@ -38,38 +40,46 @@ public class GameManager : MonoBehaviour
             Application.Quit();
         }
     }
+    public static void RegisterBall(Ball ball)
+    {
+        activeBalls.Add(ball);
+    }
+
+    public static void UnregisterBall(Ball ball)
+    {
+        activeBalls.Remove(ball);
+    }
     public static void AddScore(int points)
     {
         score += points;
     }
 
     void CheckLoseCondition()
-    {
-        // 找所有球
-        Ball[] allBalls = FindObjectsByType<Ball>(FindObjectsSortMode.None);
-
+    {   
         float highestY = float.MinValue;
-
-        foreach (Ball b in allBalls)
+        // 找所有球
+        foreach (Ball b in activeBalls)
         {
+            if (b == null) continue;
+
             Rigidbody2D rb = b.GetComponent<Rigidbody2D>();
 
-            if(b.isDroped && rb != null && rb.linearVelocity.magnitude < 0.1f && !b.isMerging) // 只考慮已落地且靜止的球
-            {
-                float topY = b.transform.position.y + b.GetComponent<CircleCollider2D>().radius;
-                if(topY > highestY)
-                    highestY = topY;
-            }
-        }
+            if (!b.isDroped || b.isMerging || !rb.IsSleeping())
+                continue;
 
-        // 如果最高球超過 loseHeight → 遊戲結束
-        if(highestY >= loseHeight)
+            float topY = b.transform.position.y +
+                        b.GetComponent<CircleCollider2D>().radius;
+
+            if (topY > highestY)
+                highestY = topY;
+        }
+        if (highestY >= loseHeight)
         {
+            Debug.Log("Lose Condition Met: HighestY = " + highestY);
             GameOver();
         }
     }
-
-    void GameOver()
+    public void GameOver()
     {
         isGameOver = true;
         Time.timeScale = 0f; // 暫停遊戲
@@ -82,7 +92,6 @@ public class GameManager : MonoBehaviour
         if(gameOverText != null)
             gameOverText.gameObject.SetActive(true);
 
-        Debug.Log("Game Over!");
     }
     void MoveRestartToBottomLeft()
     {

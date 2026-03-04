@@ -79,13 +79,15 @@ public class ballSpawner : MonoBehaviour
     {
         if(!canSpawn) return;
         GameObject newBall = Instantiate(currentBallPrefab, currentPreview.transform.position, Quaternion.identity);
+        //將newBall加入balls陣列
+        Ball newBallScript = newBall.GetComponent<Ball>();
         Destroy(currentPreview);
-        previewExists = false;     
+        previewExists = false;   
+        canSpawn = false;  
         StartCoroutine(SpawnDelay());
     }
     public IEnumerator SpawnDelay()
     {
-        canSpawn = false;
         yield return new WaitForSeconds(spawnDelay);
         if (!GameManager.isGameOver)
         {

@@ -8,12 +8,23 @@ public class Ball : MonoBehaviour
     public bool isDroped = false;     // 是否已經落地
 
     public bool isMerging = false;   // 防止重複合成
-    
+
+    private void Start() {
+        GameManager.RegisterBall(this);
+    }
+    void OnDestroy()
+    {
+        GameManager.UnregisterBall(this);
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Ball other = collision.gameObject.GetComponent<Ball>();
-        isDroped = true;
+
+        if(collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Ball"))
+        {
+            isDroped = true;
+        }
 
         if (other != null &&
             other.level == level &&
@@ -28,6 +39,8 @@ public class Ball : MonoBehaviour
         if(nextBallPrefab == null) return; // 如果沒有下一級球，直接返回
         isMerging = true;
         other.isMerging = true;
+        GameManager.UnregisterBall(this);
+        GameManager.UnregisterBall(other);
         Vector2 mergePos = other.transform.position;
         if(transform.position.y < other.transform.position.y)
         {
