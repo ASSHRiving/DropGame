@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour
 
             Rigidbody2D rb = b.GetComponent<Rigidbody2D>();
 
-            if (!b.isDroped || b.isMerging || !rb.IsSleeping())
+            if (!b.isDroped || b.isMerging || rb.linearVelocity.magnitude > 0.1f)
                 continue;
 
             float topY = b.GetComponent<CircleCollider2D>().bounds.max.y;
